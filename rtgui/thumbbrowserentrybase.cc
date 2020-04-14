@@ -246,6 +246,13 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
     if (preview) {
         prex = borderWidth + (exp_width - prew) / 2;
         prey = upperMargin + bsHeight + borderWidth;
+    }
+
+    // oisanjaya: border around thumbnail depends on prex and prey
+    drawFrame (cc, bgs, bgn);
+
+    // oisanjaya: but thumbnail image need to drawn after background
+    if (preview) {    
         backBuffer->copyRGBCharData(preview, 0, 0, prew, preh, prew * 3, prex, prey);
     }
 

@@ -146,6 +146,7 @@ ThumbBrowserEntryBase::ThumbBrowserEntryBase (const Glib::ustring& fname) :
     starty(0),
     ofsX(0),
     ofsY(0),
+    thumbBorder(0),         // oisanjaya: border around thumbnail represents color label 
     redrawRequests(0),
     parent(nullptr),
     original(nullptr),
@@ -229,7 +230,6 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
     */
 
     cc->set_antialias(Cairo::ANTIALIAS_SUBPIXEL);
-
     drawFrame (cc, bgs, bgn);
 
     // calculate height of button set
@@ -250,7 +250,6 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
     }
 
     customBackBufferUpdate (cc);
-
     // draw icons onto the thumbnail area
     bbIcons = getIconsOnImageArea ();
     bbSpecificityIcons = getSpecificityIconsOnImageArea ();
@@ -331,6 +330,8 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
         }
     }
 
+    Cairo::RefPtr<Cairo::SolidPattern> textcol;
+
     if ( ( (parent->getLocation() != ThumbBrowserBase::THLOC_EDITOR && options.showFileNames)
             || (parent->getLocation() == ThumbBrowserBase::THLOC_EDITOR && options.filmStripShowFileNames))
             && withFilename > WFNAME_NONE) {
@@ -360,9 +361,11 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
             textw = exp_width - 2 * textGap;
 
             if (selected) {
-                cc->set_source_rgb(texts.get_red(), texts.get_green(), texts.get_blue());
+                textcol = Cairo::SolidPattern::create_rgb
+                    (texts.get_red(), texts.get_green(), texts.get_blue());
             } else {
-                cc->set_source_rgb(textn.get_red(), textn.get_green(), textn.get_blue());
+                textcol = Cairo::SolidPattern::create_rgb
+                    (textn.get_red(), textn.get_green(), textn.get_blue());
             }
         } else {
             textposx_fn = istartx;
@@ -370,7 +373,8 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
             textposx_dt = istartx;
             textposy = istarty;
             textw = prew - (istartx - prex);
-            cc->set_source_rgb(texts.get_red(), texts.get_green(), texts.get_blue());
+            textcol = Cairo::SolidPattern::create_rgb
+                (texts.get_red(), texts.get_green(), texts.get_blue());
         }
 
         // draw file name
@@ -388,6 +392,13 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
         Glib::RefPtr<Pango::Layout> fn = w->create_pango_layout (dispname);
         fn->set_width (textw * Pango::SCALE);
         fn->set_ellipsize (Pango::ELLIPSIZE_MIDDLE);
+
+        cc->set_source_rgb(0,0,0);
+        cc->move_to(textposx_fn + 1, textposy + 1);
+        fn->add_to_cairo_context (cc);
+        cc->fill();
+
+        cc->set_source(textcol);
         cc->move_to(textposx_fn, textposy);
         fn->add_to_cairo_context (cc);
         cc->fill();
@@ -404,9 +415,16 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
                 fn = w->create_pango_layout (datetimeline);
                 fn->set_width (textw * Pango::SCALE);
                 fn->set_ellipsize (Pango::ELLIPSIZE_MIDDLE);
+
+                cc->set_source_rgb(0,0,0);
+                cc->move_to(textposx_dt + 1, textposy + tpos + 1);
+                fn->add_to_cairo_context (cc);
+                cc->fill();
+                cc->set_source(textcol);
                 cc->move_to(textposx_dt, textposy + tpos);
                 fn->add_to_cairo_context (cc);
                 cc->fill();
+
                 tpos += dtlabh;
             }
 
@@ -415,6 +433,12 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
                 fn = w->create_pango_layout (exifline);
                 fn->set_width (textw * Pango::SCALE);
                 fn->set_ellipsize (Pango::ELLIPSIZE_MIDDLE);
+                
+                cc->set_source_rgb(0,0,0);
+                cc->move_to(textposx_ex + 1, textposy + tpos + 1);
+                fn->add_to_cairo_context (cc);
+                cc->fill();
+                cc->set_source(textcol);
                 cc->move_to(textposx_ex, textposy + tpos);
                 fn->add_to_cairo_context (cc);
                 cc->fill();
@@ -601,6 +625,48 @@ void ThumbBrowserEntryBase::drawFrame (Cairo::RefPtr<Cairo::Context> cc, const G
         cc->set_source_rgb (fg.get_red(), fg.get_green(), fg.get_blue());
         cc->set_line_width (2.0);
         cc->stroke ();
+    }
+
+
+    // oisanjaya: color label border
+    Cairo::RefPtr<Cairo::LinearGradient> color_grad = Cairo::LinearGradient::create(+4 + 0.5 + radius, +4 + 0.5, +4 + 0.5 + radius, -4 + exp_height - 1 - radius);
+    color_grad->add_color_stop_rgba(0,0,0,0,0);
+    color_grad->add_color_stop_rgba(1,0,0,0,0);
+    
+    if (thumbBorder > 0) {
+
+        cc->move_to (+4 + 0.5 + radius, +4 + 0.5);
+        cc->arc (-4 + 0.5 + exp_width - 1 - radius, +4 + 0.5 + radius, radius, -rtengine::RT_PI / 2, 0);
+        cc->arc (-4 + 0.5 + exp_width - 1 - radius, -4 + 0.5 + exp_height - 1 - radius, radius, 0, rtengine::RT_PI / 2);
+        cc->arc (+4 + 0.5 + radius, -4 + exp_height - 1 - radius, radius, rtengine::RT_PI / 2, rtengine::RT_PI);
+        cc->arc (+4 + 0.5 + radius, +4 + radius, radius, rtengine::RT_PI, -rtengine::RT_PI / 2);
+        cc->close_path ();
+
+        switch (thumbBorder)
+        {
+        case 2://abang
+            color_grad->add_color_stop_rgba(0.5,1,0.5,0.5,1);
+            break;
+        case 3://kuning
+            color_grad->add_color_stop_rgba(0.5,1,1,0.5,1);
+            break;
+        case 4://ijo
+            color_grad->add_color_stop_rgba(0.5,0.5,1,0.5,1);
+            break;
+        case 5://biru
+            color_grad->add_color_stop_rgba(0.5,0.5,0.5,1,1);
+            break;
+        case 6://purple
+            color_grad->add_color_stop_rgba(0.5,1,0.5,1,1);
+            break;   
+        default:                                         
+            color_grad->add_color_stop_rgba(0.5,0,0,0,1);
+        }
+
+        cc->set_source(color_grad);
+        // cc->set_line_width(4);
+        // cc->stroke();
+        cc->fill();
     }
 }
 

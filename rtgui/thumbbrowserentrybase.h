@@ -75,6 +75,8 @@ protected:
 
     int ofsX, ofsY; // offset due to the scrolling of the parent
 
+    int thumbBorder; // oisanjaya: border represents colorlabel
+
     std::atomic<int> redrawRequests;
 
     ThumbBrowserBase* parent;

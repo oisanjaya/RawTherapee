@@ -41,18 +41,21 @@ public:
     static Cairo::RefPtr<RTSurface> unTrashIcon;
     static Cairo::RefPtr<RTSurface> processIcon;
 
-    static std::array<Cairo::RefPtr<RTSurface>, 6> colorLabelIcon;
+    //oisanjaya: remove color label button/icon
+    // static std::array<Cairo::RefPtr<RTSurface>, 6> colorLabelIcon;
 
     static Glib::ustring processToolTip;
     static Glib::ustring unrankToolTip;
     static Glib::ustring trashToolTip;
     static Glib::ustring untrashToolTip;
-    static Glib::ustring colorLabelToolTip;
+    //oisanjaya: remove color label button/icon
+    // static Glib::ustring colorLabelToolTip;
     static std::array<Glib::ustring, 5> rankToolTip;
 
     explicit FileThumbnailButtonSet (FileBrowserEntry* myEntry);
     void    setRank (int stars);
-    void    setColorLabel (int colorlabel);
+    //oisanjaya: remove color label button/icon
+    // void    setColorLabel (int colorlabel);
     void    setInTrash (bool inTrash);
 
 };

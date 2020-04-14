@@ -593,7 +593,8 @@ void FileBrowser::addEntry_ (FileBrowserEntry* entry)
     // add button set to the thumbbrowserentry
     entry->addButtonSet(new FileThumbnailButtonSet(entry));
     entry->getThumbButtonSet()->setRank(entry->thumbnail->getRank());
-    entry->getThumbButtonSet()->setColorLabel(entry->thumbnail->getColorLabel());
+    //oisanjaya: remove color label button/icon
+    // entry->getThumbButtonSet()->setColorLabel(entry->thumbnail->getColorLabel());
     entry->getThumbButtonSet()->setInTrash(entry->thumbnail->getStage());
     entry->getThumbButtonSet()->setButtonListener(this);
     entry->resize(getThumbnailHeight());
@@ -1559,7 +1560,8 @@ void FileBrowser::toTrashRequested (std::vector<FileBrowserEntry*> tbe)
 
         if (tbe[i]->getThumbButtonSet()) {
             tbe[i]->getThumbButtonSet()->setRank (tbe[i]->thumbnail->getRank());
-            tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
+            //oisanjaya: remove color label button/icon
+            // tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
             tbe[i]->getThumbButtonSet()->setInTrash (true);
             tbe[i]->thumbnail->updateCache (); // needed to save the colorlabel to disk in the procparam file(s) and the cache image data file
         }
@@ -1583,7 +1585,8 @@ void FileBrowser::fromTrashRequested (std::vector<FileBrowserEntry*> tbe)
 
         if (tbe[i]->getThumbButtonSet()) {
             tbe[i]->getThumbButtonSet()->setRank (tbe[i]->thumbnail->getRank());
-            tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
+            //oisanjaya: remove color label button/icon
+            // tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
             tbe[i]->getThumbButtonSet()->setInTrash (false);
             tbe[i]->thumbnail->updateCache (); // needed to save the colorlabel to disk in the procparam file(s) and the cache image data file
         }
@@ -1643,7 +1646,8 @@ void FileBrowser::colorlabelRequested (std::vector<FileBrowserEntry*> tbe, int c
 
         //TODO? - should update pparams instead?
         if (tbe[i]->getThumbButtonSet()) {
-            tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
+            //oisanjaya: remove color label button/icon
+            // tbe[i]->getThumbButtonSet()->setColorLabel (tbe[i]->thumbnail->getColorLabel());
         }
     }
 

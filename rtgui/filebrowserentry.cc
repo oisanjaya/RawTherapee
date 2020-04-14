@@ -130,9 +130,10 @@ std::vector<Glib::RefPtr<Gdk::Pixbuf>> FileBrowserEntry::getIconsOnImageArea ()
 
     std::vector<Glib::RefPtr<Gdk::Pixbuf>> ret;
 
-    if (thumbnail->hasProcParams() && editedIcon) {
-        ret.push_back(editedIcon);
-    }
+    //oisanjaya: remove color label button/icon
+    // if (thumbnail->hasProcParams() && editedIcon) {
+    //     ret.push_back(editedIcon);
+    // }
 
     if (thumbnail->isRecentlySaved() && recentlySavedIcon) {
         ret.push_back(recentlySavedIcon);
@@ -253,6 +254,11 @@ void FileBrowserEntry::_updateImage(rtengine::IImage8* img, double s, const rten
 
     bool newLandscape = img->getWidth() > img->getHeight();
     bool rotated = false;
+
+    thumbBorder = 0;
+    if (thumbnail->isPParamsValid()) {
+        thumbBorder = thumbnail->getColorLabel() + 1;
+    }
 
     if (preh == img->getHeight()) {
         const bool resize = !preview || prew != img->getWidth();

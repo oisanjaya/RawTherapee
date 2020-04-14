@@ -146,6 +146,7 @@ ThumbBrowserEntryBase::ThumbBrowserEntryBase (const Glib::ustring& fname) :
     starty(0),
     ofsX(0),
     ofsY(0),
+    thumbBorder(0),         // oisanjaya: border around thumbnail represents color label 
     redrawRequests(0),
     parent(nullptr),
     original(nullptr),
@@ -230,7 +231,6 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
 
     cc->set_antialias(Cairo::ANTIALIAS_SUBPIXEL);
 
-    drawFrame (cc, bgs, bgn);
 
     // calculate height of button set
     int bsHeight = 0;
@@ -246,6 +246,13 @@ void ThumbBrowserEntryBase::updateBackBuffer ()
     if (preview) {
         prex = borderWidth + (exp_width - prew) / 2;
         prey = upperMargin + bsHeight + borderWidth;
+    }
+
+    // oisanjaya: border around thumbnail depends on prex and prey
+    drawFrame (cc, bgs, bgn);
+
+    // oisanjaya: but thumbnail image need to drawn after background
+    if (preview) {    
         backBuffer->copyRGBCharData(preview, 0, 0, prew, preh, prew * 3, prex, prey);
     }
 
@@ -599,6 +606,43 @@ void ThumbBrowserEntryBase::drawFrame (Cairo::RefPtr<Cairo::Context> cc, const G
         cc->arc (+2 + 0.5 + radius, +2 + radius, radius, rtengine::RT_PI, -rtengine::RT_PI / 2);
         cc->close_path ();
         cc->set_source_rgb (fg.get_red(), fg.get_green(), fg.get_blue());
+        cc->set_line_width (2.0);
+        cc->stroke ();
+    }
+
+
+    // oisanjaya: color label border
+    radius = 2;
+    
+    if (thumbBorder > 0) {
+        cc->move_to(prex,prey-radius);
+        cc->arc(prex + prew, prey, radius, -rtengine::RT_PI / 2, 0);
+        cc->arc(prex + prew, prey + preh, radius, 0, rtengine::RT_PI / 2);
+        cc->arc(prex, prey + preh, radius, rtengine::RT_PI / 2, rtengine::RT_PI);
+        cc->arc(prex, prey, radius, rtengine::RT_PI, -rtengine::RT_PI / 2);
+        cc->close_path ();
+
+        switch (thumbBorder)
+        {
+        case 2://abang
+            cc->set_source_rgb(1,0,0);
+            break;
+        case 3://kuning
+            cc->set_source_rgb(1,1,0);
+            break;
+        case 4://ijo
+            cc->set_source_rgb(0,1,0);
+            break;
+        case 5://biru
+            cc->set_source_rgb(0,0,1);
+            break;
+        case 6://purple
+            cc->set_source_rgb(1,0,1);
+            break;   
+        default:                                         
+            cc->set_source_rgb(0,0,0);
+        }
+
         cc->set_line_width (2.0);
         cc->stroke ();
     }

@@ -31,13 +31,15 @@ Cairo::RefPtr<RTSurface> FileThumbnailButtonSet::unRankIcon;
 Cairo::RefPtr<RTSurface> FileThumbnailButtonSet::trashIcon;
 Cairo::RefPtr<RTSurface> FileThumbnailButtonSet::unTrashIcon;
 Cairo::RefPtr<RTSurface> FileThumbnailButtonSet::processIcon;
-std::array<Cairo::RefPtr<RTSurface>, 6> FileThumbnailButtonSet::colorLabelIcon;
+//oisanjaya: remove color label button/icon
+// std::array<Cairo::RefPtr<RTSurface>, 6> FileThumbnailButtonSet::colorLabelIcon;
 
 Glib::ustring FileThumbnailButtonSet::processToolTip;
 Glib::ustring FileThumbnailButtonSet::unrankToolTip;
 Glib::ustring FileThumbnailButtonSet::trashToolTip;
 Glib::ustring FileThumbnailButtonSet::untrashToolTip;
-Glib::ustring FileThumbnailButtonSet::colorLabelToolTip;
+//oisanjaya: remove color label button/icon
+// Glib::ustring FileThumbnailButtonSet::colorLabelToolTip;
 std::array<Glib::ustring, 5> FileThumbnailButtonSet::rankToolTip;
 
 FileThumbnailButtonSet::FileThumbnailButtonSet (FileBrowserEntry* myEntry)
@@ -50,18 +52,20 @@ FileThumbnailButtonSet::FileThumbnailButtonSet (FileBrowserEntry* myEntry)
         trashIcon   = Cairo::RefPtr<RTSurface>(new RTSurface("trash-small.png"));
         unTrashIcon = Cairo::RefPtr<RTSurface>(new RTSurface("trash-remove-small.png"));
         processIcon = Cairo::RefPtr<RTSurface>(new RTSurface("gears-small.png"));
-        colorLabelIcon[0] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-empty-gray-small.png"));
-        colorLabelIcon[1] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-red-small.png"));
-        colorLabelIcon[2] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-yellow-small.png"));
-        colorLabelIcon[3] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-green-small.png"));
-        colorLabelIcon[4] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-blue-small.png"));
-        colorLabelIcon[5] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-purple-small.png"));
+        //oisanjaya: remove color label button/icon
+        // colorLabelIcon[0] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-empty-gray-small.png"));
+        // colorLabelIcon[1] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-red-small.png"));
+        // colorLabelIcon[2] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-yellow-small.png"));
+        // colorLabelIcon[3] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-green-small.png"));
+        // colorLabelIcon[4] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-blue-small.png"));
+        // colorLabelIcon[5] = Cairo::RefPtr<RTSurface>(new RTSurface("circle-purple-small.png"));
 
         processToolTip = M("FILEBROWSER_POPUPPROCESS");
         unrankToolTip = M("FILEBROWSER_UNRANK_TOOLTIP");
         trashToolTip = M("FILEBROWSER_POPUPTRASH");
         untrashToolTip = M("FILEBROWSER_POPUPUNTRASH");
-        colorLabelToolTip = M("FILEBROWSER_COLORLABEL_TOOLTIP");
+        //oisanjaya: remove color label button/icon
+        // colorLabelToolTip = M("FILEBROWSER_COLORLABEL_TOOLTIP");
         rankToolTip[0] = M("FILEBROWSER_RANK1_TOOLTIP");
         rankToolTip[1] = M("FILEBROWSER_RANK2_TOOLTIP");
         rankToolTip[2] = M("FILEBROWSER_RANK3_TOOLTIP");
@@ -79,7 +83,7 @@ FileThumbnailButtonSet::FileThumbnailButtonSet (FileBrowserEntry* myEntry)
     }
 
     add(new LWButton(trashIcon, 7, myEntry, LWButton::Right, LWButton::Center, &trashToolTip));
-    add(new LWButton(colorLabelIcon[0], 8, myEntry, LWButton::Right, LWButton::Center, &colorLabelToolTip));
+    // add(new LWButton(colorLabelIcon[0], 8, myEntry, LWButton::Right, LWButton::Center, &colorLabelToolTip));
 }
 
 void FileThumbnailButtonSet::setRank (int stars)
@@ -90,13 +94,14 @@ void FileThumbnailButtonSet::setRank (int stars)
     }
 }
 
-void FileThumbnailButtonSet::setColorLabel (int colorLabel)
-{
+//oisanjaya: remove color label button/icon
+// void FileThumbnailButtonSet::setColorLabel (int colorLabel)
+// {
 
-    if (colorLabel >= 0 && colorLabel <= 5) {
-        buttons[8]->setIcon(colorLabelIcon[colorLabel]);
-    }
-}
+//     if (colorLabel >= 0 && colorLabel <= 5) {
+//         buttons[8]->setIcon(colorLabelIcon[colorLabel]);
+//     }
+// }
 
 void FileThumbnailButtonSet::setInTrash (bool inTrash)
 {
